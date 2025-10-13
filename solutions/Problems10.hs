@@ -36,9 +36,7 @@ myReverse x = innerRev x []
 
 isPalindrome :: (Eq x) => [x] -> Bool
 isPalindrome [] = False
-isPalindrome xs =
-  let l = div (length xs) 2
-  in (take l xs) == (take l $ reverse xs)
+isPalindrome xs = reverse xs == xs
 
 data NestedList x = Elem x | List [NestedList x]
 
