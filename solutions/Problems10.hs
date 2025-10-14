@@ -15,8 +15,8 @@
 module Problems10 where
 
 myLast :: [x] -> x
-myLast []     = error "cannot get last element from an empty list"
-myLast [hd]   = hd
+myLast [] = error "cannot get last element from an empty list"
+myLast [hd] = hd
 myLast (_:tl) = myLast tl
 
 -- or through guards:
@@ -26,8 +26,8 @@ myLast (_:tl) = myLast tl
 --   | otherwise = myLast tl
 
 myPLast :: [x] -> x
-myPLast []     = error "cannot get second-last element from an empty list"
-myPLast [x]    = x
+myPLast [] = error "cannot get second-last element from an empty list"
+myPLast [x] = x
 myPLast [x, _] = x
 myPLast (_:tl) = myPLast tl
 
@@ -63,8 +63,8 @@ flatten x = innerFlat x []
 
 compress :: (Eq x) => [x] -> [x]
 compress (f:rest@(s:tl))
-  | f == s = compress rest
-  | otherwise = f : (compress rest)
+  | f == s    = compress rest
+  | otherwise = f:(compress rest)
 compress x = x
 -- or:
 -- compress [] = []
@@ -75,7 +75,7 @@ pack [] = []
 pack [x] = [[x]]
 pack (hd:tl)
   | hd == ((head . head) li) = (hd:head li):tail li
-  | otherwise = [hd]:li
+  | otherwise                = [hd]:li
   where li = pack tl
 
 rle :: (Eq x) => [x] -> [(Int, x)]
@@ -83,5 +83,5 @@ rle [] = []
 rle [x] = [(1, x)]
 rle (hd:tl)
   | hd == ((snd . head) li) = (((fst . head) li) + 1, hd):tail li
-  | otherwise = (1, hd):li
+  | otherwise               = (1, hd):li
   where li = rle tl
