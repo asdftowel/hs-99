@@ -58,9 +58,9 @@ repli n xs = subRep n xs
   where
     subRep :: Int -> [x] -> [x]
     subRep _ [] = []
-    subRep i all@(hd:tl)
-      | i == 1 = hd:(subRep n tl)
-      | otherwise = hd:(subRep (i-1) all)
+    subRep i li@(hd:tl)
+      | i == 1    = hd:(subRep n tl)
+      | otherwise = hd:(subRep (i-1) li)
 
 dropEvery :: Int -> [x] -> [x]
 dropEvery n x = subDrop n x
@@ -85,8 +85,8 @@ slice x i k
   where
     subSlice [] _ = []
     subSlice (hd:tl) n
-      | n < i = subSlice tl (n + 1)
-      | n <= k = hd:(subSlice tl (n + 1))
+      | n < i     = subSlice tl (n + 1)
+      | n <= k    = hd:(subSlice tl (n + 1))
       | otherwise = []
 
 -- this solution is naive, but it has no arbitrary
@@ -94,10 +94,10 @@ slice x i k
 -- list's length.
 rotate :: Int -> [x] -> [x]
 rotate _ [] = []
-rotate n all@(hd:tl)
-  | n == 0    = all
+rotate n li@(hd:tl)
+  | n == 0    = li
   | n  > 0    = rotate (n - 1) (tl ++ [hd])
-  | otherwise = rotate (n + 1) ((last all):(init all))
+  | otherwise = rotate (n + 1) ((last li):(init li))
 
 removeAt :: Int -> [x] -> (x, [x])
 removeAt _ [] = error "index too large"
