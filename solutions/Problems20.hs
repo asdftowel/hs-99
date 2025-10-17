@@ -78,26 +78,17 @@ split x (hd:tl) = (hd:(fst tup), snd tup)
   where tup = split (x-1) tl
 
 slice :: [x] -> Int -> Int -> [x]
-slice x i k
-  | i < 0 || k > length x = error "slice larger than array"
-  | k < i                 = error "start is greater than end"
-  | otherwise             = subSlice x 1
-  where
-    subSlice [] _ = []
-    subSlice (hd:tl) n
-      | n < i     = subSlice tl (n + 1)
-      | n <= k    = hd:(subSlice tl (n + 1))
-      | otherwise = []
+slice m n xs = take (n - l) (drop l xs)
+  where l = m - 1
 
 -- this solution is naive, but it has no arbitrary
 -- constraints, so n can be greater than the
 -- list's length.
-rotate :: Int -> [x] -> [x]
-rotate _ [] = []
-rotate n li@(hd:tl)
-  | n == 0    = li
-  | n  > 0    = rotate (n - 1) (tl ++ [hd])
-  | otherwise = rotate (n + 1) ((last li):(init li))
+rotate :: [x] -> Int -> [x]
+rotate [] _ = []
+rotate xs 0 = xs
+rotate xs n = snd parts ++ fst parts
+  where parts = splitAt (mod n (length xs)) xs
 
 removeAt :: Int -> [x] -> (x, [x])
 removeAt _ [] = error "index too large"
