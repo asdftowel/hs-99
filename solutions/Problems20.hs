@@ -78,7 +78,7 @@ split x (hd:tl) = (hd:(fst tup), snd tup)
   where tup = split (x-1) tl
 
 slice :: [x] -> Int -> Int -> [x]
-slice m n xs = take (n - l) (drop l xs)
+slice xs m n = take (n - l) (drop l xs)
   where l = m - 1
 
 -- this solution is naive, but it has no arbitrary
