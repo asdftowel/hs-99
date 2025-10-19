@@ -48,7 +48,7 @@ myReverse x = innerRev x []
     innerRev [] acc = acc
     innerRev (hd:tl) acc = innerRev tl (hd:acc)
 
-isPalindrome :: (Eq x) => [x] -> Bool
+isPalindrome :: Eq x => [x] -> Bool
 isPalindrome [] = False
 isPalindrome xs = reverse xs == xs
 
@@ -61,27 +61,26 @@ flatten x = innerFlat x []
     innerFlat (Elem x) acc = x:acc
     innerFlat (List (hd:tl)) acc = innerFlat hd (innerFlat (List tl) acc)
 
-compress :: (Eq x) => [x] -> [x]
+compress :: Eq x => [x] -> [x]
 compress (f:rest@(s:tl))
   | f == s    = compress rest
   | otherwise = f:(compress rest)
 compress x = x
--- or:
--- compress [] = []
--- compress [x] = [x]
 
-pack :: (Eq x) => [x] -> [[x]]
-pack [] = []
-pack [x] = [[x]]
-pack (hd:tl)
-  | hd == ((head . head) li) = (hd:head li):tail li
-  | otherwise                = [hd]:li
+pack :: Eq x => [x] -> [[x]]
+pack (hd:tl) = case li of
+  (sub@(x:xs):rest) -> if hd == x
+    then (x:sub):rest
+    else [hd]:li
+  [] -> [hd]:li
   where li = pack tl
+pack [] = []
 
-rle :: (Eq x) => [x] -> [(Int, x)]
-rle [] = []
-rle [x] = [(1, x)]
-rle (hd:tl)
-  | hd == ((snd . head) li) = (((fst . head) li) + 1, hd):tail li
-  | otherwise               = (1, hd):li
+rle :: Eq x => [x] -> [(Int, x)]
+rle (hd:tl) = case li of
+  ((n, x):rest) -> if hd == x
+    then (n + 1, x):rest
+    else (1, hd):li
+  [] -> (1, hd):li
   where li = rle tl
+rle [] = []

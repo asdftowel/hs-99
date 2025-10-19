@@ -20,11 +20,11 @@ data ElementGroup x = Single x | Multiple Int x deriving Show
 -- myReverse from Problems10
 -- list and tuple indexing can be trivially implemented
 -- through pattern matching
--- replicate' :: Int -> x -> [x]
--- replicate' 0 _ = []
--- replicate' n x = x:(replicate' (n-1) x)
+-- myReplicate :: Int -> x -> [x]
+-- myReplicate 0 _ = []
+-- myReplicate n x = x:(myReplicate (n-1) x)
 
-rle' :: (Eq x) => [x] -> [ElementGroup x]
+rle' :: Eq x => [x] -> [ElementGroup x]
 rle' xs = [
   if fst x == 1
   then (Single . snd) x
@@ -37,17 +37,17 @@ decompress [] = []
 decompress ((Single hd):tl) = hd:(decompress tl)
 decompress ((Multiple n hd):tl) = (replicate n hd) ++ (decompress tl)
 
-typedRLE :: (Eq x) => [x] -> [ElementGroup x]
-typedRLE [] = []
-typedRLE [x] = [(Single x)]
-typedRLE (hd:tl) = case head li of
-  (Single x) -> if hd == x
-    then (Multiple 2 hd):(tail li)
+typedRLE :: Eq x => [x] -> [ElementGroup x]
+typedRLE (hd:tl) = case li of
+  ((Multiple n x):rest) -> if hd == x
+    then (Multiple (n + 1) x):rest
     else (Single hd):li
-  (Multiple n x) -> if hd == x
-    then (Multiple (n+1) hd):(tail li)
+  ((Single x):rest) -> if hd == x
+    then (Multiple 2 x):rest
     else (Single hd):li
+  [] -> (Single hd):li
   where li = typedRLE tl
+typedRLE [] = []
 
 dupli :: [x] -> [x]
 dupli [] = []
@@ -81,9 +81,6 @@ slice :: [x] -> Int -> Int -> [x]
 slice xs m n = take (n - l) (drop l xs)
   where l = m - 1
 
--- this solution is naive, but it has no arbitrary
--- constraints, so n can be greater than the
--- list's length.
 rotate :: [x] -> Int -> [x]
 rotate [] _ = []
 rotate xs 0 = xs
@@ -95,4 +92,3 @@ removeAt _ [] = error "index too large"
 removeAt 1 (hd:tl) = (hd, tl)
 removeAt x (hd:tl) = (fst tup, hd:(snd tup))
   where tup = removeAt (x-1) tl
-
