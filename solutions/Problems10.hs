@@ -14,6 +14,10 @@
 
 module Problems10 where
 
+import Data.List (foldl')
+
+data NestedList x = Elem x | List [NestedList x]
+
 myLast :: [x] -> x
 myLast [] = error "cannot get last element from an empty list"
 myLast [hd] = hd
@@ -33,30 +37,25 @@ myPLast (_:tl) = myPLast tl
 
 elementAt :: [x] -> Int -> x
 elementAt [] _ = error "index too large"
-elementAt (hd:tl) n
-  | n  < 0    = undefined
-  | n == 0    = hd
-  | otherwise = elementAt tl (n - 1)
+elementAt (hd:tl) 1 = hd
+elementAt (hd:tl) n = elementAt tl (n - 1)
 
 myLength :: [x] -> Int
 myLength [] = 0
 myLength (_:tl) = 1 + myLength tl
 
+-- Simplest example of list folding
 myReverse :: [x] -> [x]
-myReverse x = innerRev x []
-  where
-    innerRev [] acc = acc
-    innerRev (hd:tl) acc = innerRev tl (hd:acc)
+myReverse x = foldl' (flip (:)) [] x
 
 isPalindrome :: Eq x => [x] -> Bool
 isPalindrome [] = False
 isPalindrome xs = reverse xs == xs
 
-data NestedList x = Elem x | List [NestedList x]
-
 flatten :: NestedList x -> [x]
 flatten x = innerFlat x []
   where
+    innerFlat :: NestedList x -> [x] -> [x]
     innerFlat (List []) acc = acc
     innerFlat (Elem x) acc = x:acc
     innerFlat (List (hd:tl)) acc = innerFlat hd (innerFlat (List tl) acc)
