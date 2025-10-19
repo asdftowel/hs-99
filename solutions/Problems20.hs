@@ -12,6 +12,8 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
+module Problems20 where
+
 import Problems10 (rle)
 
 data ElementGroup x = Single x | Multiple Int x deriving Show
