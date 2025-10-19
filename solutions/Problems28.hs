@@ -12,6 +12,8 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
+module Problems28 where
+
 insertAt :: x -> [x] -> Int -> [x]
 insertAt x xs 1 = x:xs
 insertAt _ [] _ = error "insertion index greater than array length"
