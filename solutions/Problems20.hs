@@ -16,7 +16,7 @@ limitations under the License.
 
 module Problems20 where
 
-import Problems10 (rle)
+import           Problems10 (rle)
 
 data ElementGroup x = Single x | Multiple Int x deriving Show
 
@@ -39,8 +39,8 @@ rle' xs = [
           ]
 
 decompress :: [ElementGroup x] -> [x]
-decompress [] = []
-decompress ((Single hd):tl) = hd:(decompress tl)
+decompress []                   = []
+decompress ((Single hd):tl)     = hd:(decompress tl)
 decompress ((Multiple n hd):tl) = (replicate n hd) ++ (decompress tl)
 
 typedRLE :: Eq x => [x] -> [ElementGroup x]
@@ -56,7 +56,7 @@ typedRLE (hd:tl) = case li of
 typedRLE [] = []
 
 dupli :: [x] -> [x]
-dupli [] = []
+dupli []      = []
 dupli (hd:tl) = hd:hd:(dupli tl)
 
 repli :: Int -> [x] -> [x]
@@ -78,7 +78,7 @@ dropEvery n x = subDrop n x
       | otherwise = hd:(subDrop (i - 1) tl)
 
 split :: Int -> [x] -> ([x], [x])
-split _ [] = error "index too large"
+split _ []      = error "index too large"
 split 1 (hd:tl) = ([hd], tl)
 split x (hd:tl) = (hd:(fst tup), snd tup)
   where tup = split (x-1) tl
@@ -94,7 +94,7 @@ rotate xs n = snd parts ++ fst parts
   where parts = splitAt (mod n (length xs)) xs
 
 removeAt :: Int -> [x] -> (x, [x])
-removeAt _ [] = error "index too large"
+removeAt _ []      = error "index too large"
 removeAt 1 (hd:tl) = (hd, tl)
 removeAt x (hd:tl) = (fst tup, hd:(snd tup))
   where tup = removeAt (x-1) tl

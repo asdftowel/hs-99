@@ -16,13 +16,13 @@ limitations under the License.
 
 module Problems10 where
 
-import Data.List (foldl')
+import           Data.List (foldl')
 
 data NestedList x = Elem x | List [NestedList x]
 
 myLast :: [x] -> x
-myLast [] = error "cannot get last element from an empty list"
-myLast [hd] = hd
+myLast []     = error "cannot get last element from an empty list"
+myLast [hd]   = hd
 myLast (_:tl) = myLast tl
 
 -- or through guards:
@@ -32,18 +32,18 @@ myLast (_:tl) = myLast tl
 --   | otherwise = myLast tl
 
 myPLast :: [x] -> x
-myPLast [] = error "cannot get second-last element from an empty list"
-myPLast [x] = x
+myPLast []     = error "cannot get second-last element from an empty list"
+myPLast [x]    = x
 myPLast [x, _] = x
 myPLast (_:tl) = myPLast tl
 
 elementAt :: [x] -> Int -> x
-elementAt [] _ = error "index too large"
+elementAt [] _      = error "index too large"
 elementAt (hd:tl) 1 = hd
 elementAt (hd:tl) n = elementAt tl (n - 1)
 
 myLength :: [x] -> Int
-myLength [] = 0
+myLength []     = 0
 myLength (_:tl) = 1 + myLength tl
 
 -- Simplest example of list folding
@@ -58,8 +58,8 @@ flatten :: NestedList x -> [x]
 flatten x = innerFlat x []
   where
     innerFlat :: NestedList x -> [x] -> [x]
-    innerFlat (List []) acc = acc
-    innerFlat (Elem x) acc = x:acc
+    innerFlat (List []) acc      = acc
+    innerFlat (Elem x) acc       = x:acc
     innerFlat (List (hd:tl)) acc = innerFlat hd (innerFlat (List tl) acc)
 
 compress :: Eq x => [x] -> [x]
