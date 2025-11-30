@@ -80,8 +80,8 @@ split 1 (hd : tl) = ([hd], tl)
 split x (hd : tl) = (hd : fst tup, snd tup)
   where tup = split (x - 1) tl
 
-slice :: [x] -> Int -> Int -> [x]
-slice xs m n = take (n - l) (drop l xs)
+slice :: Int -> Int -> [x] -> [x]
+slice m n = take (n - l) . drop l
   where l = m - 1
 
 rotate :: [x] -> Int -> [x]
