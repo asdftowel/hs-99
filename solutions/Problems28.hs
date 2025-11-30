@@ -16,8 +16,8 @@ limitations under the License.
 
 module Problems28 where
 
-import Data.List (nub)
-import System.Random (randomRs, StdGen)
+import           Data.List     (nub)
+import           System.Random (StdGen, randomRs)
 
 insertAt :: x -> [x] -> Int -> [x]
 insertAt x xs 1      = x:xs
