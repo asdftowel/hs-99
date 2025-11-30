@@ -16,7 +16,8 @@ limitations under the License.
 
 module Problems20 where
 
-import Problems10 (rle)
+import           Data.Function (fix)
+import           Problems10    (rle)
 
 data ElementGroup x = Single x | Multiple Int x deriving Show
 
@@ -39,49 +40,45 @@ rle' xs = [
           ]
 
 decompress :: [ElementGroup x] -> [x]
-decompress [] = []
-decompress ((Single hd):tl) = hd:(decompress tl)
-decompress ((Multiple n hd):tl) = (replicate n hd) ++ (decompress tl)
+decompress []                   = []
+decompress (Single hd : tl)     = hd : decompress tl
+decompress (Multiple n hd : tl) = replicate n hd ++ decompress tl
 
 typedRLE :: Eq x => [x] -> [ElementGroup x]
-typedRLE (hd:tl) = case li of
-  ((Multiple n x):rest) -> if hd == x
-    then (Multiple (n + 1) x):rest
-    else (Single hd):li
-  ((Single x):rest) -> if hd == x
-    then (Multiple 2 x):rest
-    else (Single hd):li
-  [] -> (Single hd):li
+typedRLE (hd : tl) = case li of
+  (Multiple n x : rest) -> if hd == x
+    then Multiple (n + 1) x : rest
+    else Single hd : li
+  (Single x : rest) -> if hd == x
+    then Multiple 2 x : rest
+    else Single hd : li
+  [] -> Single hd : li
   where li = typedRLE tl
 typedRLE [] = []
 
 dupli :: [x] -> [x]
-dupli [] = []
-dupli (hd:tl) = hd:hd:(dupli tl)
+dupli []        = []
+dupli (hd : tl) = hd : hd : dupli tl
 
 repli :: Int -> [x] -> [x]
-repli n xs = subRep n xs
-  where
-    subRep :: Int -> [x] -> [x]
-    subRep _ [] = []
-    subRep i li@(hd:tl)
-      | i == 1    = hd:(subRep n tl)
-      | otherwise = hd:(subRep (i-1) li)
+repli n li = fix (
+  \f m xs -> case xs of
+    []      -> []
+    (hd:tl) -> if m == 1 then hd : f n tl else hd : f (m - 1) xs
+                 ) n li
 
 dropEvery :: Int -> [x] -> [x]
-dropEvery n x = subDrop n x
-  where
-    subDrop :: Int -> [x] -> [x]
-    subDrop _ [] = []
-    subDrop i (hd:tl)
-      | i == 1    = subDrop n tl
-      | otherwise = hd:(subDrop (i - 1) tl)
+dropEvery n li = fix (
+  \f m xs -> case xs of
+    []      -> []
+    (hd:tl) -> if m == 1 then f n tl else hd : f (m - 1) tl
+                     ) n li
 
 split :: Int -> [x] -> ([x], [x])
-split _ [] = error "index too large"
-split 1 (hd:tl) = ([hd], tl)
-split x (hd:tl) = (hd:(fst tup), snd tup)
-  where tup = split (x-1) tl
+split _ []        = error "index too large"
+split 1 (hd : tl) = ([hd], tl)
+split x (hd : tl) = (hd : fst tup, snd tup)
+  where tup = split (x - 1) tl
 
 slice :: [x] -> Int -> Int -> [x]
 slice xs m n = take (n - l) (drop l xs)
@@ -91,10 +88,10 @@ rotate :: [x] -> Int -> [x]
 rotate [] _ = []
 rotate xs 0 = xs
 rotate xs n = snd parts ++ fst parts
-  where parts = splitAt (mod n (length xs)) xs
+  where parts = splitAt ((mod n . length) xs) xs
 
 removeAt :: Int -> [x] -> (x, [x])
-removeAt _ [] = error "index too large"
-removeAt 1 (hd:tl) = (hd, tl)
-removeAt x (hd:tl) = (fst tup, hd:(snd tup))
+removeAt _ []        = error "index too large"
+removeAt 1 (hd : tl) = (hd, tl)
+removeAt x (hd : tl) = (fst tup, hd : snd tup)
   where tup = removeAt (x-1) tl
