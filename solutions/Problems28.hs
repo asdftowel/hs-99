@@ -16,6 +16,9 @@ limitations under the License.
 
 module Problems28 where
 
+import Data.List (nub)
+import System.Random (randomRs, StdGen)
+
 insertAt :: x -> [x] -> Int -> [x]
 insertAt x xs 1      = x:xs
 insertAt _ [] _      = error "insertion index greater than array length"
@@ -23,3 +26,12 @@ insertAt x (hd:tl) n = hd:(insertAt x tl (n-1))
 
 range :: (Enum x) => x -> x -> [x]
 range x y = [x..y]
+
+rndSelect :: [x] -> Int -> StdGen -> [x]
+rndSelect [] _ = const []
+rndSelect li n = map (li !!) . take n . randomRs (0, length li - 1)
+
+diffSelect :: Int -> Int -> StdGen -> [Int]
+diffSelect n m
+  | n > m = error "requested more numbers than available"
+  | otherwise = take n . nub . randomRs (1, m)
