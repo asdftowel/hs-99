@@ -16,7 +16,8 @@ limitations under the License.
 
 module Problems20 where
 
-import           Problems10 (rle)
+import           Data.Function (fix)
+import           Problems10    (rle)
 
 data ElementGroup x = Single x | Multiple Int x deriving Show
 
@@ -39,9 +40,9 @@ rle' xs = [
           ]
 
 decompress :: [ElementGroup x] -> [x]
-decompress []                   = []
-decompress ((Single hd):tl)     = hd:(decompress tl)
-decompress ((Multiple n hd):tl) = (replicate n hd) ++ (decompress tl)
+decompress []                     = []
+decompress ((Single hd) : tl)     = hd : (decompress tl)
+decompress ((Multiple n hd) : tl) = (replicate n hd) ++ (decompress tl)
 
 typedRLE :: Eq x => [x] -> [ElementGroup x]
 typedRLE (hd:tl) = case li of
@@ -60,22 +61,18 @@ dupli []      = []
 dupli (hd:tl) = hd:hd:(dupli tl)
 
 repli :: Int -> [x] -> [x]
-repli n xs = subRep n xs
-  where
-    subRep :: Int -> [x] -> [x]
-    subRep _ [] = []
-    subRep i li@(hd:tl)
-      | i == 1    = hd:(subRep n tl)
-      | otherwise = hd:(subRep (i-1) li)
+repli n li = fix (
+  \f m xs -> case xs of
+    []      -> []
+    (hd:tl) -> if m == 1 then hd : f n tl else hd : f (m - 1) xs
+                 ) n li
 
 dropEvery :: Int -> [x] -> [x]
-dropEvery n x = subDrop n x
-  where
-    subDrop :: Int -> [x] -> [x]
-    subDrop _ [] = []
-    subDrop i (hd:tl)
-      | i == 1    = subDrop n tl
-      | otherwise = hd:(subDrop (i - 1) tl)
+dropEvery n li = fix (
+  \f m xs -> case xs of
+    []      -> []
+    (hd:tl) -> if m == 1 then f n tl else hd : f (m - 1) tl
+                     ) n li
 
 split :: Int -> [x] -> ([x], [x])
 split _ []      = error "index too large"

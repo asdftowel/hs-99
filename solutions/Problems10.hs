@@ -16,7 +16,8 @@ limitations under the License.
 
 module Problems10 where
 
-import           Data.List (foldl')
+import           Data.Function (fix)
+import           Data.List     (foldl')
 
 data NestedList x = Elem x | List [NestedList x]
 
@@ -55,12 +56,12 @@ isPalindrome [] = False
 isPalindrome xs = reverse xs == xs
 
 flatten :: NestedList x -> [x]
-flatten x = innerFlat x []
-  where
-    innerFlat :: NestedList x -> [x] -> [x]
-    innerFlat (List []) acc      = acc
-    innerFlat (Elem x) acc       = x:acc
-    innerFlat (List (hd:tl)) acc = innerFlat hd (innerFlat (List tl) acc)
+flatten li = fix (
+  \f xs acc -> case xs of
+    List []        -> acc
+    Elem x         -> x : acc
+    List (hd : tl) -> (f hd . f (List tl)) acc
+                 ) li []
 
 compress :: Eq x => [x] -> [x]
 compress (f:rest@(s:tl))
