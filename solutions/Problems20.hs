@@ -61,18 +61,18 @@ dupli []        = []
 dupli (hd : tl) = hd : hd : dupli tl
 
 repli :: Int -> [x] -> [x]
-repli n li = fix (
+repli n = fix (
   \f m xs -> case xs of
     []      -> []
     (hd:tl) -> if m == 1 then hd : f n tl else hd : f (m - 1) xs
-                 ) n li
+              ) n
 
 dropEvery :: Int -> [x] -> [x]
-dropEvery n li = fix (
+dropEvery n = fix (
   \f m xs -> case xs of
     []      -> []
     (hd:tl) -> if m == 1 then f n tl else hd : f (m - 1) tl
-                     ) n li
+                  ) n
 
 split :: Int -> [x] -> ([x], [x])
 split _ []        = error "index too large"
