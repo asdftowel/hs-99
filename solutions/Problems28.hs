@@ -20,12 +20,12 @@ import           Data.List     (nub)
 import           System.Random (StdGen, randomRs)
 
 insertAt :: x -> [x] -> Int -> [x]
-insertAt x xs 1      = x:xs
-insertAt _ [] _      = error "insertion index greater than array length"
-insertAt x (hd:tl) n = hd:(insertAt x tl (n-1))
+insertAt x xs 1        = x : xs
+insertAt _ [] _        = error "insertion index greater than array length"
+insertAt x (hd : tl) n = hd : (insertAt x tl (n - 1))
 
 range :: (Enum x) => x -> x -> [x]
-range x y = [x..y]
+range x y = [x .. y]
 
 rndSelect :: [x] -> Int -> StdGen -> [x]
 rndSelect [] _ = const []
