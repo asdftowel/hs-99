@@ -21,15 +21,13 @@ import           Data.List     (foldl')
 
 data NestedList x = Elem x | List [NestedList x]
 
-myLast :: [x] -> x
-myLast []       = error "empty list"
-myLast [hd]     = hd
-myLast (_ : tl) = myLast tl
+myLast li@(hd:tl) = foldl' (flip const) hd li
+myLast [] = error "empty list"
 
-myPLast :: [x] -> x
-myPLast [x, _]   = x
-myPLast (_ : tl) = myPLast tl
-myPLast li       = error "not enough elements"
+myButLast (x : rest@(_ : ys))
+  | null ys   = x
+  | otherwise = myButLast rest
+myButLast _ = error "not enough elements"
 
 elementAt :: [x] -> Int -> x
 elementAt [] _        = error "index too large"
