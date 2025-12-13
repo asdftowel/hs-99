@@ -86,7 +86,7 @@ slice m n = take (n - l) . drop l
 
 rotate :: [x] -> Int -> [x]
 rotate [] _ = []
-rotate li 0 = xs
+rotate li 0 = li
 rotate li n = snd parts ++ fst parts
   where parts = splitAt ((mod n . length) li) li
 
