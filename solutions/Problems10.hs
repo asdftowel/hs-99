@@ -22,8 +22,8 @@ import           Data.List     (foldl')
 data NestedList x = Elem x | List [NestedList x]
 
 myLast :: [x] -> x
-myLast li@(hd:tl) = foldl' (flip const) hd li
-myLast [] = error "empty list"
+myLast li@(hd : _) = foldl' (flip const) hd li
+myLast []          = error "empty list"
 
 myButLast :: [x] -> x
 myButLast (x : rest@(_ : ys))
@@ -33,8 +33,8 @@ myButLast _ = error "not enough elements"
 
 elementAt :: [x] -> Int -> x
 elementAt [] _        = error "index too large"
-elementAt (hd : tl) 1 = hd
-elementAt (hd : tl) n = elementAt tl (n - 1)
+elementAt (hd : _) 1 = hd
+elementAt (_ : tl) n = elementAt tl (n - 1)
 
 myLength :: [x] -> Int
 myLength = foldl' (const . (+ 1)) 0
@@ -44,7 +44,7 @@ myReverse = foldl' (flip (:)) []
 
 isPalindrome :: Eq x => [x] -> Bool
 isPalindrome [] = False
-isPalindrome xs = reverse xs == xs
+isPalindrome li = reverse li == li
 
 flatten :: NestedList x -> [x]
 flatten li = fix (
@@ -55,14 +55,14 @@ flatten li = fix (
                  ) li []
 
 compress :: Eq x => [x] -> [x]
-compress (f : rest@(s : tl))
+compress (f : rest@(s : _))
   | f == s    = compress rest
   | otherwise = f : compress rest
 compress x = x
 
 pack :: Eq x => [x] -> [[x]]
 pack (hd : tl) = case li of
-  (sub@(x : xs) : rest) -> if hd == x
+  (sub@(x : _) : rest) -> if hd == x
     then (x : sub) : rest
     else [hd] : li
   [] -> [hd] : li
