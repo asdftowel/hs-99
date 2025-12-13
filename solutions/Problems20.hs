@@ -32,11 +32,11 @@ myReplicate n x = x:(myReplicate (n-1) x)
 -}
 
 rle' :: Eq x => [x] -> [ElementGroup x]
-rle' xs = [
+rle' li = [
   if fst x == 1
   then (Single . snd) x
   else Multiple (fst x) (snd x)
-  | x <- rle xs
+  | x <- rle li
           ]
 
 decompress :: [ElementGroup x] -> [x]
@@ -86,9 +86,9 @@ slice m n = take (n - l) . drop l
 
 rotate :: [x] -> Int -> [x]
 rotate [] _ = []
-rotate xs 0 = xs
-rotate xs n = snd parts ++ fst parts
-  where parts = splitAt ((mod n . length) xs) xs
+rotate li 0 = xs
+rotate li n = snd parts ++ fst parts
+  where parts = splitAt ((mod n . length) li) li
 
 removeAt :: Int -> [x] -> (x, [x])
 removeAt _ []        = error "index too large"
