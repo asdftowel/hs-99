@@ -40,16 +40,21 @@ rle' li = [
           ]
 
 decompress :: [ElementGroup x] -> [x]
-decompress []                   = []
-decompress (Single hd : tl)     = hd : decompress tl
-decompress (Multiple n hd : tl) = replicate n hd ++ decompress tl
+decompress = concatMap (
+  \itm ->
+    case itm of
+      Single x -> [x]
+      Multiple n x -> replicate n x
+                       )
 
 typedRLE :: Eq x => [x] -> [ElementGroup x]
 typedRLE (hd : tl) = case li of
-  (Multiple n x : rest) -> if hd == x
+  (Multiple n x : rest) ->
+    if hd == x
     then Multiple (n + 1) x : rest
     else Single hd : li
-  (Single x : rest) -> if hd == x
+  (Single x : rest) ->
+    if hd == x
     then Multiple 2 x : rest
     else Single hd : li
   [] -> Single hd : li

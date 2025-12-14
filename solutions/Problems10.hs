@@ -63,7 +63,8 @@ compress x = x
 
 pack :: Eq x => [x] -> [[x]]
 pack (hd : tl) = case li of
-  (sub@(x : _) : rest) -> if hd == x
+  (sub@(x : _) : rest) ->
+    if hd == x
     then (x : sub) : rest
     else [hd] : li
   [] -> [hd] : li
@@ -72,7 +73,8 @@ pack [] = []
 
 rle :: Eq x => [x] -> [(Int, x)]
 rle (hd : tl) = case li of
-  ((n, x) : rest) -> if hd == x
+  ((n, x) : rest) ->
+    if hd == x
     then (n + 1, x) : rest
     else (1, hd) : li
   [] -> (1, hd) : li
