@@ -32,9 +32,10 @@ myButLast (x : rest@(_ : ys))
 myButLast _ = error "not enough elements"
 
 elementAt :: [x] -> Int -> x
-elementAt [] _       = error "index too large"
-elementAt (hd : _) 1 = hd
-elementAt (_ : tl) n = elementAt tl (n - 1)
+elementAt (hd : tl) n
+  | n == 1    = hd
+  | otherwise = elementAt tl (n - 1)
+elementAt [] _ = error "index too large"
 
 myLength :: [x] -> Int
 myLength = foldl' (const . (+ 1)) 0
