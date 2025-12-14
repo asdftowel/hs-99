@@ -32,7 +32,7 @@ myButLast (x : rest@(_ : ys))
 myButLast _ = error "not enough elements"
 
 elementAt :: [x] -> Int -> x
-elementAt [] _        = error "index too large"
+elementAt [] _       = error "index too large"
 elementAt (hd : _) 1 = hd
 elementAt (_ : tl) n = elementAt tl (n - 1)
 
