@@ -22,8 +22,8 @@ import           Data.List     (foldl')
 data NestedList x = Elem x | List [NestedList x]
 
 myLast :: [x] -> x
-myLast li@(hd : _) = foldl' (flip const) hd li
-myLast []          = error "empty list"
+myLast (hd : tl) = foldl' (flip const) hd tl
+myLast []        = error "empty list"
 
 myButLast :: [x] -> x
 myButLast (x : rest@(_ : ys))
